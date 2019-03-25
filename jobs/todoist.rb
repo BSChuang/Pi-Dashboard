@@ -14,12 +14,27 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
     request = Net::HTTP::Get.new(item_uri.request_uri)
     response = http.request(request)
 
+
+
     if response.code == "200"
         result = JSON.parse(response.body)
         items = result['items']
         items_array = Array[]
+        hash = Hash.new
         items.each do |st|
-             items_array.push(st['content'])
+            dateString = st['date_string']
+            if dateString != nil
+                date = Date.parse(dateString)
+                difference = (date - Date.today).to_i
+                hash[dateString + ": " + st['content']] = difference
+            end
+        end
+        sorted = hash.sort_by { |name, date| date }
+        limit = 0;
+        sorted.each do |val|
+            if (limit < 5)
+                items_array.push(val[0]);
+            end
         end
         send_event('todoist', {items: items_array})
     else
