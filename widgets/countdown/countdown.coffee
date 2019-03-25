@@ -20,7 +20,7 @@ class Dashing.Countdown extends Dashing.Widget
         dayname = 'day'
         if d > 1
           dayname = 'days'
-        @set('timeleft', d + " "+dayname+" " + @formatTime(h) + ":" + @formatTime(m) + ":" + @formatTime(s))
+        @set('timeleft', d + ":" + @formatTime(h) + ":" + @formatTime(m) + ":" + @formatTime(s))
       else
         @set('timeleft', @formatTime(h) + ":" + @formatTime(m) + ":" + @formatTime(s))
 
