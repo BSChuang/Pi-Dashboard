@@ -41,7 +41,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
         sorted = hash.sort_by { |name, date| date }
         limit = 0;
         sorted.each do |val|
-            if (limit < 5)
+            if (limit < 3)
                 items_array.push(val[0]);
             end
         end
