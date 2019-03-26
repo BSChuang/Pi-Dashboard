@@ -35,7 +35,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
                 date = Date.parse(dateString)
                 difference = (date - Date.today).to_i
                 puts projHash[st['project_id']].to_s
-                hash[dateString + ": " + projHash[st['project_id']].to_s + " " + st['content']] = difference
+                hash[dateString + " - " + projHash[st['project_id']].to_s + ": " +  + " " + st['content']] = difference
             end
         end
         sorted = hash.sort_by { |name, date| date }
