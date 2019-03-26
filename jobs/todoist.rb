@@ -5,7 +5,7 @@ todoist_token = 'f04ea8df6e7df8b33bfb22d02c5ce2894c2fd204'
 
 SCHEDULER.every '5m', :first_in => 0 do |job|
     
-    item_url_string  = 'https://todoist.com/API/v7/sync?token=' + todoist_token + '&resource_types=["items"]&sync_token=\'*\''
+    item_url_string  = 'https://todoist.com/API/v7/sync?token=' + todoist_token + '&resource_types=["items", "projects"]&sync_token=\'*\''
     encoded_item_url_string = URI.encode(item_url_string)
 
     item_uri = URI.parse(encoded_item_url_string)
@@ -18,7 +18,15 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
 
     if response.code == "200"
         result = JSON.parse(response.body)
+        
+        projects = result['projects']
+        projHash = Hash.new;
+        projects.each do |proj|
+            projHash[proj['id']] = proj['name']
+        end
+
         items = result['items']
+        puts items
         items_array = Array[]
         hash = Hash.new
         items.each do |st|
@@ -26,7 +34,8 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
             if dateString != nil
                 date = Date.parse(dateString)
                 difference = (date - Date.today).to_i
-                hash[dateString + ": " + st['content']] = difference
+                puts projHash[st['project_id']].to_s
+                hash[dateString + ": " + projHash[st['project_id']].to_s + " " + st['content']] = difference
             end
         end
         sorted = hash.sort_by { |name, date| date }
