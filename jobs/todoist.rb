@@ -43,6 +43,7 @@ SCHEDULER.every '5m', :first_in => 0 do |job|
         sorted.each do |val|
             if (limit < 3)
                 items_array.push(val[0]);
+		limit = limit + 1;
             end
         end
         send_event('todoist', {items: items_array})
